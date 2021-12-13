@@ -28,12 +28,12 @@ int main()
 	std::vector<double> temp_values;
 	std::string input_str,temp_str;
 
-	setlocale(LC_ALL, "Russian");
+	//setlocale(LC_ALL, "Russian");
 	//Забавный факт, если включить строчку выше, то stod начнёт воспринимать ',' как разделитель, а не '.'
 	std::ifstream input_file("test.txt");
 	try {
 		if (!input_file.is_open()) {
-			throw std::runtime_error("Не могу открыть файл");
+			throw std::runtime_error("Couldn't open file");
 		}
 
 		std::getline(input_file, input_str);
@@ -43,7 +43,7 @@ int main()
 		while (std::getline(input_file, input_str)) {
 			split_to_double(input_str, '\t',temp_values);
 			if(temp_values.size()!=names.size())
-				throw std::length_error("- строка с неправильным количеством элементов");
+				throw std::length_error("Wrong number of items in row");
 			values.push_back(temp_values);
 			temp_values.clear();
 		}
@@ -60,13 +60,18 @@ int main()
 		}
 	}
 	catch (const std::runtime_error& exept) {
-		std::cout << "Исключение: " << values.size() + 1 << ' ' << exept.what() << std::endl;
+		std::cout << "Exception: "<< ' ' << exept.what() << std::endl;
 	}
 	catch(const std::invalid_argument& exept){//для stod
-		std::cout << "Исключение: " << values.size() + 1 << ' ' << exept.what() << std::endl;
+		std::cout << "Exception: " << ' ' << exept.what() << std::endl;
+		std::cout << "Row number " << values.size() + 1 << ' ' << "is containing non-double item in column number " <<temp_values.size()+1 << std::endl;
 	}
 	catch (const std::length_error& exept) {
-		std::cout << "Исключение: " <<values.size()+1 <<' '<< exept.what() << std::endl;
+		std::cout << "Exception: " << exept.what() << std::endl;
+		if (temp_values.size() < names.size())
+			std::cout << "Row number " << values.size() + 1 << ' ' << "is missing " << names.size() - temp_values.size() << " item(s) " << std::endl;
+		else
+			std::cout << "Row number " << values.size() + 1 << ' ' << "is containing " <<  temp_values.size()- names.size() << " extra item(s) " << std::endl;
 	}
 	return 0;
 }
