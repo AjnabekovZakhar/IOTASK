@@ -28,11 +28,11 @@ int main()
 	std::vector<double> temp_values;
 	std::string input_str,temp_str;
 
-	//test - всё работает
-	//test1 - не существует
-	//test2 - не хватает элемента
-	//test3 - лишние элементы
-	//test4 - некорректное значение
+	//test - Correct
+	//test1 - Couldn't open file
+	//test2 - Wrong number of items in row(one is missing)
+	//test3 - Wrong number of items in row(4 extra elements)
+	//test4 - stod exception
 
 	std::ifstream input_file("test.txt");
 
