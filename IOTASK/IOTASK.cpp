@@ -28,9 +28,15 @@ int main()
 	std::vector<double> temp_values;
 	std::string input_str,temp_str;
 
-	//setlocale(LC_ALL, "Russian");
-	//Забавный факт, если включить строчку выше, то stod начнёт воспринимать ',' как разделитель, а не '.'
+	//test - всё работает
+	//test1 - не существует
+	//test2 - не хватает элемента
+	//test3 - лишние элементы
+	//test4 - некорректное значение
+
 	std::ifstream input_file("test.txt");
+
+
 	try {
 		if (!input_file.is_open()) {
 			throw std::runtime_error("Couldn't open file");
