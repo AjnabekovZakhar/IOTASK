@@ -5,12 +5,6 @@
 #include<fstream>
 #include<vector>
 
-void split_to_double(const std::string& s, char delim, std::vector<double>& elems) {
-	std::stringstream ss;
-	ss.str(s);
-	std::string item;
-
-}
 int main()
 {
 	std::vector<std::string> names;
@@ -24,7 +18,7 @@ int main()
 	//test3 - Wrong number of items in row(4 extra elements)
 	//test4 - stod exception
 
-	std::ifstream input_file("test4.txt");
+	std::ifstream input_file("test.txt");
 
 
 	try {
