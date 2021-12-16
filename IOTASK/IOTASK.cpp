@@ -5,21 +5,11 @@
 #include<fstream>
 #include<vector>
 
-void split(const std::string& s, char delim, std::vector<std::string>& elems) {
-	std::stringstream ss;
-	ss.str(s);
-	std::string item;
-	while (std::getline(ss, item, delim)) {
-		elems.push_back(item);
-	}
-}
 void split_to_double(const std::string& s, char delim, std::vector<double>& elems) {
 	std::stringstream ss;
 	ss.str(s);
 	std::string item;
-	while (std::getline(ss, item, delim)) {
-		elems.push_back(stod(item));
-	}
+
 }
 int main()
 {
@@ -34,7 +24,7 @@ int main()
 	//test3 - Wrong number of items in row(4 extra elements)
 	//test4 - stod exception
 
-	std::ifstream input_file("test.txt");
+	std::ifstream input_file("test4.txt");
 
 
 	try {
@@ -44,16 +34,34 @@ int main()
 
 		std::getline(input_file, input_str);
 
-		split(input_str, '\t', names);
+		std::stringstream ss;
+
+		ss.str(input_str);
+		while (std::getline(ss, temp_str, '\t')) {
+			names.push_back(temp_str);
+		}
 
 		while (std::getline(input_file, input_str)) {
-			split_to_double(input_str, '\t',temp_values);
-			if(temp_values.size()!=names.size())
-				throw std::length_error("Wrong number of items in row");
+			ss.clear();
+			ss.str(input_str);
+			temp_str.clear();
+			try {
+				while (std::getline(ss, temp_str, '\t')) {
+					temp_values.push_back(stod(temp_str));
+				}
+			}
+			catch (const std::invalid_argument& exept) {
+				throw std::invalid_argument("Row number  " + std::to_string(values.size() + 1) + " is containing non-double item in colunm number "+std::to_string(temp_values.size()+1));
+			}
+			
+			if (temp_values.size() < names.size())
+				throw std::length_error("Row number "+std::to_string(values.size() + 1)+ " is missing " +std::to_string( names.size() - temp_values.size() )+ " item(s) ");
+			if (temp_values.size() > names.size())
+				throw std::length_error("Row number " + std::to_string(values.size() + 1) + " is containing " + std::to_string(temp_values.size() - names.size()) + " extra item(s) ");
+		
 			values.push_back(temp_values);
 			temp_values.clear();
 		}
-
 		for (int i = 0; i < names.size(); ++i)
 			std::cout << names[i] << '\t';
 		std::cout << std::endl;
@@ -65,20 +73,10 @@ int main()
 			std::cout << std::endl;
 		}
 	}
-	catch (const std::runtime_error& exept) {
+	catch (const std::exception& exept) {
 		std::cout << "Exception: "<< ' ' << exept.what() << std::endl;
 	}
-	catch(const std::invalid_argument& exept){//для stod
-		std::cout << "Exception: " << ' ' << exept.what() << std::endl;
-		std::cout << "Row number " << values.size() + 1 << ' ' << "is containing non-double item in column number " <<temp_values.size()+1 << std::endl;
-	}
-	catch (const std::length_error& exept) {
-		std::cout << "Exception: " << exept.what() << std::endl;
-		if (temp_values.size() < names.size())
-			std::cout << "Row number " << values.size() + 1 << ' ' << "is missing " << names.size() - temp_values.size() << " item(s) " << std::endl;
-		else
-			std::cout << "Row number " << values.size() + 1 << ' ' << "is containing " <<  temp_values.size()- names.size() << " extra item(s) " << std::endl;
-	}
+
 	return 0;
 }
 
